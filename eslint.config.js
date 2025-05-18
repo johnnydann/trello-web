@@ -28,6 +28,14 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+
+      //MUI
+      'no-restricted-imports': [
+        'error',
+        {
+          'patterns': [{ 'regex': '^@mui/[^/]+$' }]
+        }
+      ],
     },
   },
 ]
