@@ -99,9 +99,20 @@ function BoardBar() {
                             height: 34,
                             fontSize: 16,
                             border: "none",
+                            color: "white",
+                            cursor: "pointer",
+                            "&:first-of-type": {
+                                bgcolor: "#a4b0be",
+                            },
                         },
                     }}
                 >
+                    <Tooltip>
+                        <Avatar
+                            alt='Remy Sharp'
+                            src='https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/3/28/1172827/Messi-World-Cup.jpg'
+                        />
+                    </Tooltip>
                     <Tooltip>
                         <Avatar
                             alt='Remy Sharp'
