@@ -18,8 +18,9 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import ListCards from "./ListCards/ListCards";
+import { mapOrder } from "~/utils/sorts";
 
-function Column() {
+function Column({ column }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -28,6 +29,9 @@ function Column() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const orderdCards = mapOrder(column?.cards, column?.cardOrderIds, "_id");
+
     return (
         <Box
             sx={{
@@ -58,7 +62,7 @@ function Column() {
                     variant='h6'
                     sx={{ fontSize: "1rem", cursor: "pointer" }}
                 >
-                    Column name
+                    {column?.title}
                 </Typography>
                 <Box>
                     <Tooltip title='More options'>
@@ -127,7 +131,7 @@ function Column() {
             </Box>
 
             {/* list card */}
-            <ListCards />
+            <ListCards cards={orderdCards} />
             {/* footer */}
             <Box
                 sx={{

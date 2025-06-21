@@ -6,7 +6,7 @@ import NoteAddIcon from "@mui/icons-material/NoteAdd";
 const Column_Header_Height = "50px";
 const Column_Footer_Height = "56px";
 
-function ListColumns() {
+function ListColumns({ columns }) {
     return (
         <Box
             sx={{
@@ -20,9 +20,9 @@ function ListColumns() {
             }}
         >
             {/* board content */}
-            <Column />
-            <Column />
-            <Column />
+            {columns?.map((column) => {
+                return <Column key={column._id} column={column} />;
+            })}
 
             {/* box add new column */}
             <Box

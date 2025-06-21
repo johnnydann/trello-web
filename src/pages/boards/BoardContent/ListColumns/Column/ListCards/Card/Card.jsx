@@ -8,7 +8,14 @@ import GroupIcon from "@mui/icons-material/Group";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 
-function Card() {
+function Card({ card }) {
+    const shouldShowCardAction = () => {
+        return (
+            !!card?.memberIds?.length ||
+            !!card?.comments?.length ||
+            !!card?.attachments?.length
+        );
+    };
     return (
         <MuiCard
             sx={{
@@ -17,25 +24,36 @@ function Card() {
                 overflow: "unset",
             }}
         >
-            <CardMedia
-                sx={{ height: 140 }}
-                image='https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/3/28/1172827/Messi-World-Cup.jpg'
-                title='green iguana'
-            />
+            {card?.cover && (
+                <CardMedia
+                    sx={{ height: 140 }}
+                    image={card?.cover}
+                    title='green iguana'
+                />
+            )}
+
             <CardContent sx={{ p: 1.5, "&:last-child": { p: 1.5 } }}>
-                <Typography>Goat Messi</Typography>
+                <Typography>{card?.title}</Typography>
             </CardContent>
-            <CardActions sx={{ p: "0  4px 8px 4px" }}>
-                <Button size='small' startIcon={<GroupIcon />}>
-                    20
-                </Button>
-                <Button size='small' startIcon={<ModeCommentIcon />}>
-                    20
-                </Button>
-                <Button size='small' startIcon={<AttachFileIcon />}>
-                    20
-                </Button>
-            </CardActions>
+            {shouldShowCardAction() && (
+                <CardActions sx={{ p: "0  4px 8px 4px" }}>
+                    {!!card?.memberIds?.length && (
+                        <Button size='small' startIcon={<GroupIcon />}>
+                            {card?.memberIds?.length}
+                        </Button>
+                    )}
+                    {!!card?.comments?.length && (
+                        <Button size='small' startIcon={<ModeCommentIcon />}>
+                            {card?.comments?.length}
+                        </Button>
+                    )}
+                    {!!card?.attachments?.length && (
+                        <Button size='small' startIcon={<AttachFileIcon />}>
+                            {card?.attachments?.length}
+                        </Button>
+                    )}
+                </CardActions>
+            )}
         </MuiCard>
     );
 }
