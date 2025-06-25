@@ -19,8 +19,22 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import ListCards from "./ListCards/ListCards";
 import { mapOrder } from "~/utils/sorts";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 function Column({ column }) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: column._id,
+        data: { ...column },
+    });
+
+    const dndKitColumnStyle = {
+        // touchAction: "none",
+        //sử dụng css.transform như docs sẽ bị lỗi stretch
+        transform: CSS.Translate.toString(transform),
+        transition,
+    };
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -34,6 +48,10 @@ function Column({ column }) {
 
     return (
         <Box
+            ref={setNodeRef}
+            style={dndKitColumnStyle}
+            {...attributes}
+            {...listeners}
             sx={{
                 minWidth: "300px",
                 maxWidth: "300px",
@@ -43,9 +61,7 @@ function Column({ column }) {
                 borderRadius: "6px",
                 height: "fit-content",
                 maxHeight: (theme) =>
-                    `calc(${theme.trello.boardContenHeight} - ${theme.spacing(
-                        5
-                    )})`,
+                    `calc(${theme.trello.boardContenHeight} - ${theme.spacing(5)})`,
             }}
         >
             {/* header */}
@@ -58,10 +74,7 @@ function Column({ column }) {
                     justifyContent: "space-between",
                 }}
             >
-                <Typography
-                    variant='h6'
-                    sx={{ fontSize: "1rem", cursor: "pointer" }}
-                >
+                <Typography variant='h6' sx={{ fontSize: "1rem", cursor: "pointer" }}>
                     {column?.title}
                 </Typography>
                 <Box>
