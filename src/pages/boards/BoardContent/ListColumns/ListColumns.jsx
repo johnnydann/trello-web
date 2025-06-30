@@ -4,9 +4,6 @@ import Button from "@mui/material/Button";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import { SortableContext, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 
-const Column_Header_Height = "50px";
-const Column_Footer_Height = "56px";
-
 function ListColumns({ columns }) {
     return (
         <SortableContext
