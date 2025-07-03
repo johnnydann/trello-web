@@ -48,7 +48,7 @@ function AppBar() {
                         sx={{ color: "white" }}
                     />
                     <Typography
-                        variant='span'
+                        variant='h6'
                         sx={{
                             fontSize: "1.2rem",
                             fontWeight: "bold",
@@ -103,9 +103,7 @@ function AppBar() {
                                         color: "white",
                                         cursor: "pointer",
                                         display:
-                                            searchValue.length <= 0
-                                                ? "none"
-                                                : "block",
+                                            searchValue.length <= 0 ? "none" : "block",
                                     }}
                                 />
                             </InputAdornment>
@@ -126,18 +124,12 @@ function AppBar() {
                 />
                 <ModeSelect />
                 <Tooltip title='Notification'>
-                    <Badge
-                        color='warning'
-                        variant='dot'
-                        sx={{ cursor: "pointer" }}
-                    >
+                    <Badge color='warning' variant='dot' sx={{ cursor: "pointer" }}>
                         <NotificationsNoneIcon sx={{ color: "white" }} />
                     </Badge>
                 </Tooltip>
                 <Tooltip title='Help'>
-                    <HelpOutlineIcon
-                        sx={{ cursor: "pointer", color: "white" }}
-                    />
+                    <HelpOutlineIcon sx={{ cursor: "pointer", color: "white" }} />
                 </Tooltip>
 
                 <Profiles />
