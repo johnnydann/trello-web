@@ -6,10 +6,10 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import theme from "./theme";
 
 createRoot(document.getElementById("root")).render(
-    <StrictMode>
-        <CssVarsProvider theme={theme}>
-            <CssBaseline />
-            <App />
-        </CssVarsProvider>
-    </StrictMode>
+    // <StrictMode>
+    <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <App />
+    </CssVarsProvider>
+    // </StrictMode>
 );

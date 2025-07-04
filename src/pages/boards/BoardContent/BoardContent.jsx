@@ -11,8 +11,12 @@ import {
     DragOverlay,
     defaultDropAnimationSideEffects,
     closestCorners,
+    // closestCenter,
+    pointerWithin,
+    // rectIntersection,
+    getFirstCollision,
 } from "@dnd-kit/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import { cloneDeep } from "lodash";
@@ -33,6 +37,9 @@ function BoardContent({ board }) {
     const [activeDragItemType, setactiveDragItemType] = useState(null);
     const [activeDragItemData, setactiveDragItemData] = useState(null);
     const [oldColWhenDraggingCard, setOldColWhenDraggingCard] = useState(null);
+
+    //điểm va chạm cuối cùng (xử lý thuật toán va chạm, 37)
+    const lastOverId = useRef(null);
 
     useEffect(() => {
         setOrderedColsState(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
@@ -160,6 +167,7 @@ function BoardContent({ board }) {
     };
 
     const handleDragOver = (event) => {
+        // console.log("handleDragOver");
         if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return;
 
         const { active, over } = event;
@@ -313,10 +321,59 @@ function BoardContent({ board }) {
         }),
     };
 
+    const collisionDetectionStrategy = useCallback(
+        (args) => {
+            // console.log("collisionDetectionStrategy");
+            if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+                return closestCorners({ ...args });
+            }
+
+            //tìm các điểm giao nhau, va chạm intersection với con trỏ
+            const pointerIntersections = pointerWithin(args);
+
+            //nếu pointerIntersections là mảng rỗng return luôn ko làm gì hết
+            //fix triệt để lỗi fickering của thư viện dndkit (chỉ bị với card có cover ảnh)
+            if (!pointerIntersections) return;
+
+            // const intersections =
+            //     pointerIntersections?.length > 0 //để ? để tránh null và bị crash trang
+            //         ? pointerIntersections
+            //         : rectIntersection(args);
+
+            //tìm overId đầu tiên trong intersections ở trên
+            let overId = getFirstCollision(pointerIntersections, "id");
+            if (overId) {
+                //nếu cái over nó là column thì sẽ tự tìm tới cái cardId gần nhất bên trong khu vực va chạm đó dựa vào thuật toán
+                //phát hiện va chạm closestCenter hoặc closestCorners đều đc
+                const checkColumn = orderedColsState.find(
+                    (column) => column._id === overId
+                );
+                if (checkColumn) {
+                    overId = closestCorners({
+                        ...args,
+                        droppableContainers: args.droppableContainers.filter(
+                            (container) =>
+                                container.id !== overId &&
+                                checkColumn?.cardOrderIds?.includes(container.id)
+                        ),
+                    })[0]?.id;
+                }
+                lastOverId.current = overId;
+                return [{ id: overId }];
+            }
+
+            //nếu overId là null thì trả về mảng rỗng, tránh lỗi crash trang
+            return lastOverId.current ? [{ id: lastOverId.current }] : [];
+        },
+        [activeDragItemType, orderedColsState]
+    );
+
     return (
         <DndContext
             sensors={mySensors}
-            collisionDetection={closestCorners} //thuật toán phát hiện va chạm
+            //dùng closestCorners sẽ bị lỗi nhảy (flickering)
+            // collisionDetection={closestCorners} //thuật toán phát hiện va chạm
+            collisionDetection={collisionDetectionStrategy}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
