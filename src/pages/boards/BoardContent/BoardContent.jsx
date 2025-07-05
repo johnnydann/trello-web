@@ -19,7 +19,9 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
+
+import { generatePlaceholderCard } from "~/utils/fortmater";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
@@ -114,6 +116,11 @@ function BoardContent({ board }) {
                     (card) => card._id !== activeDraggingCardId
                 );
 
+                if (isEmpty(nextActiveColumn.cards)) {
+                    nextActiveColumn.cards = [
+                        generatePlaceholderCard(nextActiveColumn),
+                    ];
+                }
                 //cập nhật lại cardOrderIds cho chuẩn dữ liệu
                 nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
                     (card) => card._id
@@ -140,11 +147,15 @@ function BoardContent({ board }) {
                     rebuild_activeDraggingCardData
                 );
 
+                //xoá placeholder card
+                nextOverColumn.cards = nextOverColumn.cards.filter(
+                    (card) => !card.FE_PlaceholderCard
+                );
                 nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
                     (card) => card._id
                 );
             }
-
+            console.log("nextColumns: ", nextColumns);
             return nextColumns;
         });
     };
