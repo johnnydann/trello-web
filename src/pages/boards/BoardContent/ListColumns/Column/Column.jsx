@@ -1,4 +1,5 @@
 import React from 'react'
+import { toast } from 'react-toastify'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
@@ -60,7 +61,9 @@ function Column({ column }) {
 
     const addNewCard = () => {
         if (!newCardTitle) {
-            // console.error('please enter a title')
+            toast.error('please enter a title', {
+                position: 'bottom-right'
+            })
             return
         }
         //gọi api ở đây
