@@ -1,7 +1,7 @@
 export const capitalizeFirstLetter = (val) => {
-    if (!val) return "";
-    return `${val.charAt(0).toUpperCase()}${val.slice(1)}`;
-};
+    if (!val) return ''
+    return `${val.charAt(0).toUpperCase()}${val.slice(1)}`
+}
 
 //37.2
 export const generatePlaceholderCard = (column) => {
@@ -9,6 +9,6 @@ export const generatePlaceholderCard = (column) => {
         _id: `${column._id}-placeholder-card`,
         boardId: column.boardId,
         columnId: column._id,
-        FE_PlaceholderCard: true,
-    };
-};
+        FE_PlaceholderCard: true
+    }
+}
