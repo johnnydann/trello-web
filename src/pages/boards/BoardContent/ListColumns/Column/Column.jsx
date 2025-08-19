@@ -206,6 +206,7 @@ function Column({ column }) {
                                 type='text'
                                 variant='outlined'
                                 autoFocus
+                                data-no-dnd = 'true'
                                 value={newCardTitle}
                                 onChange={(e) => setNewCardTitle(e.target.value)}
                                 sx={{
@@ -241,6 +242,7 @@ function Column({ column }) {
                                     onClick={addNewCard}
                                     variant='contained'
                                     color='success'
+                                    data-no-dnd = 'true'
                                     size='small'
                                     sx={{
                                         boxShadow: 'none',

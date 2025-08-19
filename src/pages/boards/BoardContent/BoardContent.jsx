@@ -6,8 +6,8 @@ import {
     // PointerSensor,
     useSensor,
     useSensors,
-    MouseSensor,
-    TouchSensor,
+    // MouseSensor,
+    // TouchSensor,
     DragOverlay,
     defaultDropAnimationSideEffects,
     closestCorners,
@@ -16,6 +16,7 @@ import {
     // rectIntersection,
     getFirstCollision
 } from '@dnd-kit/core'
+import { MouseSensor, TouchSensor } from '~/customLib/DndkitSensors'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 
@@ -155,7 +156,7 @@ function BoardContent({ board }) {
                     (card) => card._id
                 )
             }
-            console.log('nextColumns: ', nextColumns)
+            // console.log('nextColumns: ', nextColumns)
             return nextColumns
         })
     }
@@ -272,7 +273,7 @@ function BoardContent({ board }) {
                     newCardIndex
                 )
 
-                console.log('dndOrderedCardsState: ', dndOrderedCardsState)
+                // console.log('dndOrderedCardsState: ', dndOrderedCardsState)
                 setOrderedColsState((prevColumns) => {
                     const nextCards = cloneDeep(prevColumns)
 
