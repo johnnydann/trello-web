@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
-import { set } from 'lodash'
+import { toast } from 'react-toastify'
 
 function ListColumns({ columns }) {
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
@@ -16,7 +16,7 @@ function ListColumns({ columns }) {
 
     const addNewColumn = () => {
         if (!newColumnTitle) {
-            // console.error('please enter a title')
+            toast.error('please enter a column title')
             return
         }
         //gọi api ở đây
