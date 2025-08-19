@@ -3,11 +3,11 @@ import Board from './pages/boards/id'
 
 
 function App() {
-  return(
-    <>
-      <Board />
-    </>
-  )
+    return (
+        <>
+            <Board />
+        </>
+    )
 }
 
 export default App

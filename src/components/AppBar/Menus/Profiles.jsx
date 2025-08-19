@@ -1,25 +1,25 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Logout from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
-import PersonAdd from "@mui/icons-material/PersonAdd";
+import React from 'react'
+import Box from '@mui/material/Box'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Avatar from '@mui/material/Avatar'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import Logout from '@mui/icons-material/Logout'
+import Settings from '@mui/icons-material/Settings'
+import PersonAdd from '@mui/icons-material/PersonAdd'
 
 function Profiles() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
+    const [anchorEl, setAnchorEl] = React.useState(null)
+    const open = Boolean(anchorEl)
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
     return (
         <Box>
             <Tooltip title='Account settings'>
@@ -27,9 +27,9 @@ function Profiles() {
                     onClick={handleClick}
                     size='small'
                     sx={{ padding: 0 }}
-                    aria-controls={open ? "basic-menu-profiles" : undefined}
+                    aria-controls={open ? 'basic-menu-profiles' : undefined}
                     aria-haspopup='true'
-                    aria-expanded={open ? "true" : undefined}
+                    aria-expanded={open ? 'true' : undefined}
                 >
                     <Avatar
                         sx={{ width: 30, height: 30 }}
@@ -44,7 +44,7 @@ function Profiles() {
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{
-                    "aria-labelledby": "basic-button-profiles",
+                    'aria-labelledby': 'basic-button-profiles'
                 }}
             >
                 <MenuItem>
@@ -74,7 +74,7 @@ function Profiles() {
                 </MenuItem>
             </Menu>
         </Box>
-    );
+    )
 }
 
-export default Profiles;
+export default Profiles
