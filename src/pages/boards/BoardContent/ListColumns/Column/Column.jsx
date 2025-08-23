@@ -25,7 +25,7 @@ import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({
             id: column._id,
@@ -59,7 +59,7 @@ function Column({ column }) {
 
     const [newCardTitle, setNewCardTitle] = useState('')
 
-    const addNewCard = () => {
+    const addNewCard = async () => {
         if (!newCardTitle) {
             toast.error('please enter a title', {
                 position: 'bottom-right'
@@ -67,7 +67,13 @@ function Column({ column }) {
             return
         }
         //gọi api ở đây
+        const newCardData = {
+            title: newCardTitle,
+            columnId: column._id
+        }
 
+        //gọi lên props func createNewCard nằm ở component cao nhất (boards/id.jsx)
+        await createNewCard(newCardData)
 
         //đóng trạng thái thêm Cards mới và clear input
         toggleOpenNewCardForm()

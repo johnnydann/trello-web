@@ -32,8 +32,8 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 
-function BoardContent({ board }) {
-    const [orderedColsState, setOrderedColsState] = useState([])
+function BoardContent({ board, createNewColumn, createNewCard }) {
+    const [orderedColumns, setOrderedColumns] = useState([])
 
     //cùng một thời điểm chỉ có một phần tử đang đc kéo (column hoặc card)
     const [activeDragItemId, setactiveDragItemId] = useState(null)
@@ -45,7 +45,7 @@ function BoardContent({ board }) {
     const lastOverId = useRef(null)
 
     useEffect(() => {
-        setOrderedColsState(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+        setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
     }, [board])
 
     // const pointerSensor = useSensor(PointerSensor, {
@@ -67,7 +67,7 @@ function BoardContent({ board }) {
 
     //tìm một cái column theo cái cardId
     const findColumnByCardId = (cardId) => {
-        return orderedColsState.find(
+        return orderedColumns.find(
             (column) => column?.cards?.map((card) => card._id)?.includes(cardId) // có thể dùng some thay thế map
         )
     }
@@ -82,7 +82,7 @@ function BoardContent({ board }) {
         activeDraggingCardId,
         activeDraggingCardData
     ) => {
-        setOrderedColsState((prevColumns) => {
+        setOrderedColumns((prevColumns) => {
             const overCardIndex = overColumn?.cards?.findIndex(
                 (card) => card._id === overCardId
             )
@@ -274,7 +274,7 @@ function BoardContent({ board }) {
                 )
 
                 // console.log('dndOrderedCardsState: ', dndOrderedCardsState)
-                setOrderedColsState((prevColumns) => {
+                setOrderedColumns((prevColumns) => {
                     const nextCards = cloneDeep(prevColumns)
 
                     const targetColumn = nextCards.find(
@@ -295,27 +295,27 @@ function BoardContent({ board }) {
         if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
             if (active.id !== over.id) {
                 //lấy vị trí cũ từ active
-                const oldColumnIndex = orderedColsState.findIndex(
+                const oldColumnIndex = orderedColumns.findIndex(
                     (c) => c._id === active.id
                 )
                 //lấy vị trí mới từ over
-                const newColumnIndex = orderedColsState.findIndex(
+                const newColumnIndex = orderedColumns.findIndex(
                     (c) => c._id === over.id
                 )
 
                 //packages/sortable/src/utilities/arrayMove.ts src code cảu arrayMove
-                const dndOrderedColsState = arrayMove(
-                    orderedColsState,
+                const dndOrderedColumns = arrayMove(
+                    orderedColumns,
                     oldColumnIndex,
                     newColumnIndex
                 )
-                // const dndOrderedColsIds = dndOrderedColsState.map((c) => c._id);
+                // const dndOrderedColsIds = dndOrderedColumns.map((c) => c._id);
                 // // 2 cái clg này sau dùng để xử lý api
-                // console.log(dndOrderedColsState);
+                // console.log(dndOrderedColumns);
                 // console.log(dndOrderedColsIds);
 
                 //cập nhật lại sau khi kéo thả
-                setOrderedColsState(dndOrderedColsState)
+                setOrderedColumns(dndOrderedColumns)
             }
         }
 
@@ -357,7 +357,7 @@ function BoardContent({ board }) {
             if (overId) {
                 //nếu cái over nó là column thì sẽ tự tìm tới cái cardId gần nhất bên trong khu vực va chạm đó dựa vào thuật toán
                 //phát hiện va chạm closestCenter hoặc closestCorners đều đc
-                const checkColumn = orderedColsState.find(
+                const checkColumn = orderedColumns.find(
                     (column) => column._id === overId
                 )
                 if (checkColumn) {
@@ -377,7 +377,7 @@ function BoardContent({ board }) {
             //nếu overId là null thì trả về mảng rỗng, tránh lỗi crash trang
             return lastOverId.current ? [{ id: lastOverId.current }] : []
         },
-        [activeDragItemType, orderedColsState]
+        [activeDragItemType, orderedColumns]
     )
 
     return (
@@ -399,7 +399,11 @@ function BoardContent({ board }) {
                     p: '10px 0'
                 }}
             >
-                <ListColumns columns={orderedColsState} />
+                <ListColumns
+                    columns={orderedColumns}
+                    createNewColumn ={createNewColumn}
+                    createNewCard = {createNewCard}
+                />
                 <DragOverlay dropAnimation={customDropAnimation}>
                     {!activeDragItemType && null}
                     {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
