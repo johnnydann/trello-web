@@ -8,19 +8,24 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
     const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
     const [newColumnTitle, setNewColumnTitle] = useState('')
 
-    const addNewColumn = () => {
+    const addNewColumn = async () => {
         if (!newColumnTitle) {
             toast.error('please enter a column title')
             return
         }
         //gọi api ở đây
+        const newColumnData = {
+            title: newColumnTitle
+        }
 
+        //gọi lên props func createNewColumn nằm ở component cao nhất (boards/id.jsx)
+        await createNewColumn(newColumnData)
 
         //đóng trạng thái thêm columns mới và clear input
         toggleOpenNewColumnForm()
@@ -45,7 +50,7 @@ function ListColumns({ columns }) {
             >
                 {/* board content */}
                 {columns?.map((column) => {
-                    return <Column key={column._id} column={column} />
+                    return <Column key={column._id} column={column} createNewCard ={createNewCard}/>
                 })}
 
                 {/* box add new column */}
