@@ -32,7 +32,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
     const [orderedColumns, setOrderedColumns] = useState([])
 
     //cùng một thời điểm chỉ có một phần tử đang đc kéo (column hoặc card)
@@ -309,12 +309,12 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
                     oldColumnIndex,
                     newColumnIndex
                 )
-                // const dndOrderedColsIds = dndOrderedColumns.map((c) => c._id);
-                // // 2 cái clg này sau dùng để xử lý api
-                // console.log(dndOrderedColumns);
-                // console.log(dndOrderedColsIds);
+
+                //gọi lên props func lên moveColumns nằm ở component cha cao nhất (boards/id.jsx)
+                moveColumns(dndOrderedColumns)
 
                 //cập nhật lại sau khi kéo thả
+                //vẫn gọi update state ở đây để tránh delay hoặc bị nhảy giao diện lúc kéo thả cần phải chờ gọi API
                 setOrderedColumns(dndOrderedColumns)
             }
         }
