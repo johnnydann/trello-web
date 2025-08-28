@@ -3,25 +3,35 @@ import { API_ROOT } from '~/utils/constants'
 
 //board
 export const fetchBoardDetailsApi = async (boardId) => {
-    const respone = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
+    const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
     //lưu ý axios sẽ trả kết quả về qua property của nó là data
-    return respone.data
+    return response.data
 }
 
 export const updateBoardDetailsApi = async (boardId, updateData) => {
-    const respone = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
-    //lưu ý axios sẽ trả kết quả về qua property của nó là data
-    return respone.data
+    const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
+    return response.data
 }
+
+export const moveCardToDifferentAPI = async (updateData) => {
+    const response = await axios.put(`${API_ROOT}/v1/boards/supports/moving_card`, updateData)
+    return response.data
+}
+
 
 //column
 export const createNewColumnApi = async (newColumnData) => {
-    const respone = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
-    return respone.data
+    const response = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
+    return response.data
+}
+
+export const updateColumnDetailsApi = async (columnId, updateData) => {
+    const response = await axios.put(`${API_ROOT}/v1/columns/${columnId}`, updateData)
+    return response.data
 }
 
 //card
 export const createNewCardApi = async (newCardData) => {
-    const respone = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
-    return respone.data
+    const response = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
+    return response.data
 }

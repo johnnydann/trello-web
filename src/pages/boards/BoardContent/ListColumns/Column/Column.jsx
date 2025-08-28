@@ -21,7 +21,6 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import ListCards from './ListCards/ListCards'
-import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -52,14 +51,15 @@ function Column({ column, createNewCard }) {
         setAnchorEl(null)
     }
 
-    const orderdCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+    // Cards đã được sắp xếp ở component cha cao nhất (board/id.jsx) vid 71 lí do
+    const orderdCards = column.cards
 
     const [openNewCardForm, setOpenNewCardForm] = useState(false)
     const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
 
     const [newCardTitle, setNewCardTitle] = useState('')
 
-    const addNewCard = async () => {
+    const addNewCard = () => {
         if (!newCardTitle) {
             toast.error('please enter a title', {
                 position: 'bottom-right'
@@ -73,7 +73,7 @@ function Column({ column, createNewCard }) {
         }
 
         //gọi lên props func createNewCard nằm ở component cao nhất (boards/id.jsx)
-        await createNewCard(newCardData)
+        createNewCard(newCardData)
 
         //đóng trạng thái thêm Cards mới và clear input
         toggleOpenNewCardForm()
