@@ -282,7 +282,6 @@ function BoardContent({
                 )
             } else {
                 //hành động kéo thả card trong cùng 1 column
-
                 //lấy vị trí cũ từ oldColWhenDraggingCard
                 const oldCardIndex = oldColWhenDraggingCard?.cards?.findIndex((c) => c._id === activeDragItemId )
                 //lấy vị trí mới từ thằng overColumn
