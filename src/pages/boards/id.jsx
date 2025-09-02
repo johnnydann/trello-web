@@ -11,13 +11,15 @@ import {
     createNewColumnApi,
     updateBoardDetailsApi,
     updateColumnDetailsApi,
-    moveCardToDifferentAPI
+    moveCardToDifferentAPI,
+    deleteColumnDetailsApi
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/fortmater'
 import { isEmpty } from 'lodash'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
+import { toast } from 'react-toastify'
 
 function Board() {
     const [board, setBoard] = useState(null)
@@ -144,6 +146,21 @@ function Board() {
         })
     }
 
+    // xử lý xoá một column và cards bên trong nó
+    const deleteColumnDetails = (columnId) => {
+        //update lại board
+        const newBoard = { ...board }
+        newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+        setBoard(newBoard)
+
+        //gọi API xử lý phía BE
+        deleteColumnDetailsApi(columnId).then(res => {
+            toast.success(res?.deleteResult)
+        })
+
+    }
+
     if (!board) {
         return (
             <Box sx={{
@@ -171,6 +188,7 @@ function Board() {
                 moveColumns = {moveColumns}
                 moveCardInTheSameColumn = {moveCardInTheSameColumn}
                 moveCardToDifferentColumn = {moveCardToDifferentColumn}
+                deleteColumnDetails = {deleteColumnDetails}
             />
         </Container>
     )
