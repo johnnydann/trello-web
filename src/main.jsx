@@ -5,6 +5,9 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from './theme'
 
+//cấu hình MUI DIALOG
+import { ConfirmProvider } from 'material-ui-confirm'
+
 //cấu hình react toastify
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -12,9 +15,17 @@ import 'react-toastify/dist/ReactToastify.css'
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <CssVarsProvider theme={theme}>
-        <CssBaseline />
-        <App />
-        <ToastContainer position='bottom-left' theme='colored'/>
+        <ConfirmProvider defaultOptions={{
+            allowClose: false,
+            dialogProps: { maxWidth: 'xs' },
+            confirmationButtonProps: { color: 'success', variant: 'outlined' },
+            cancellationButtonProps: { color: 'error' },
+            buttonOrder: ['confirm', 'cancel']
+        }}>
+            <CssBaseline />
+            <App />
+            <ToastContainer position='bottom-left' theme='colored'/>
+        </ConfirmProvider>
     </CssVarsProvider>
     // </StrictMode>
 )

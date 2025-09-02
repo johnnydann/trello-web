@@ -30,6 +30,11 @@ export const updateColumnDetailsApi = async (columnId, updateData) => {
     return response.data
 }
 
+export const deleteColumnDetailsApi = async (columnId) => {
+    const response = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`)
+    return response.data
+}
+
 //card
 export const createNewCardApi = async (newCardData) => {
     const response = await axios.post(`${API_ROOT}/v1/cards`, newCardData)

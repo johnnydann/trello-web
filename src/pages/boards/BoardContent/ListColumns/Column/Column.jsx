@@ -23,8 +23,9 @@ import Box from '@mui/material/Box'
 import ListCards from './ListCards/ListCards'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useConfirm } from 'material-ui-confirm'
 
-function Column({ column, createNewCard }) {
+function Column({ column, createNewCard, deleteColumnDetails }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({
             id: column._id,
@@ -51,7 +52,7 @@ function Column({ column, createNewCard }) {
         setAnchorEl(null)
     }
 
-    // Cards đã được sắp xếp ở component cha cao nhất (board/id.jsx) vid 71 lí do
+    // Cards đã được sắp xếp ở component cha cao nhất (board/id.jsx) vid 64 lí do
     const orderdCards = column.cards
 
     const [openNewCardForm, setOpenNewCardForm] = useState(false)
@@ -78,6 +79,33 @@ function Column({ column, createNewCard }) {
         //đóng trạng thái thêm Cards mới và clear input
         toggleOpenNewCardForm()
         setNewCardTitle('')
+    }
+
+    //xử lý xoá một Column và Card bên trong nó
+    const confirmDeleteColumn = useConfirm()
+
+    const handleDeleteColumn = () => {
+        confirmDeleteColumn({
+            title: 'Delete Column?',
+            description: 'This action will be permently delete your Column and its Cards! Are you sure?',
+            confirmationText: 'Confirm'
+            // buttonOrder: ['confirm', 'cancel']
+            // allowClose: false,
+            // dialogProps: { maxWidth: 'xs' },
+            // confirmationButtonProps: { color: 'success', variant: 'outlined' },
+            // cancellationButtonProps: { color: 'error' },
+
+
+            // confirmationKeyword: 'dpn'
+
+        })
+            .then(() => {
+                deleteColumnDetails(column._id)
+            })
+            .catch(() => {
+                /* ... */
+            })
+
     }
 
     //phải bọc div ở đây vì vấn đề bị giựt khi kéo thả columns
@@ -133,17 +161,25 @@ function Column({ column, createNewCard }) {
                             />
                         </Tooltip>
                         <Menu
-                            id='basic-menu-workspaces'
+                            id='basic-menu-column-dropdown'
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
+                            onClick={handleClose}
                             MenuListProps={{
-                                'aria-labelledby': 'basic-button-workspaces'
+                                'aria-labelledby': 'basic-column-dropdown'
                             }}
                         >
-                            <MenuItem>
+                            <MenuItem
+                                onClick={toggleOpenNewCardForm}
+                                sx={{
+                                    '&:hover':{ color: 'success.light',
+                                        '& .add-card-icon': { color: 'success.light' }
+                                    }
+                                }}
+                            >
                                 <ListItemIcon>
-                                    <AddCardIcon fontSize='small' />
+                                    <AddCardIcon className='add-card-icon' fontSize='small' />
                                 </ListItemIcon>
                                 <ListItemText>Add new card</ListItemText>
                             </MenuItem>
@@ -166,15 +202,29 @@ function Column({ column, createNewCard }) {
                                 <ListItemText>Paste</ListItemText>
                             </MenuItem>
                             <Divider />
-                            <MenuItem>
+                            <MenuItem
+                                onClick={handleDeleteColumn}
+                                // & + space là truy cập vào thằng con, ngược lại thì nó sẽ hiểu là classname của MenuItem
+                                sx={{
+                                    '&:hover':{ color: 'warning.dark',
+                                        '& .delete-forever-icon': { color: 'warning.dark' }
+                                    }
+                                }}
+                            >
                                 <ListItemIcon>
-                                    <DeleteForeverIcon fontSize='small' />
+                                    <DeleteForeverIcon className='delete-forever-icon' fontSize='small' />
                                 </ListItemIcon>
-                                <ListItemText>Remove this column</ListItemText>
+                                <ListItemText>Delete this column</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem
+                                sx={{
+                                    '&:hover':{ color: 'primary.light',
+                                        '& .cloud': { color: 'primary.light' }
+                                    }
+                                }}
+                            >
                                 <ListItemIcon>
-                                    <Cloud fontSize='small' />
+                                    <Cloud className='cloud' fontSize='small' />
                                 </ListItemIcon>
                                 <ListItemText>Archive this column</ListItemText>
                             </MenuItem>
@@ -259,7 +309,8 @@ function Column({ column, createNewCard }) {
                                         borderColor: (theme) => theme.palette.success.main,
                                         '&:hover': { bgcolor: (theme) => theme.palette.success.main }
                                     }}
-                                >Add</Button>
+                                >Add
+                                </Button>
                                 <CloseIcon
                                     fontSize='small'
                                     sx={{
