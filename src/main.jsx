@@ -12,20 +12,24 @@ import { ConfirmProvider } from 'material-ui-confirm'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+// cấu hình redux store
+import { Provider } from 'react-redux'
+import { store } from '~/redux/store.js'
+
 createRoot(document.getElementById('root')).render(
-    // <StrictMode>
-    <CssVarsProvider theme={theme}>
-        <ConfirmProvider defaultOptions={{
-            allowClose: false,
-            dialogProps: { maxWidth: 'xs' },
-            confirmationButtonProps: { color: 'success', variant: 'outlined' },
-            cancellationButtonProps: { color: 'error' },
-            buttonOrder: ['confirm', 'cancel']
-        }}>
-            <CssBaseline />
-            <App />
-            <ToastContainer position='bottom-left' theme='colored'/>
-        </ConfirmProvider>
-    </CssVarsProvider>
-    // </StrictMode>
+    <Provider store={store}>
+        <CssVarsProvider theme={theme}>
+            <ConfirmProvider defaultOptions={{
+                allowClose: false,
+                dialogProps: { maxWidth: 'xs' },
+                confirmationButtonProps: { color: 'success', variant: 'outlined' },
+                cancellationButtonProps: { color: 'error' },
+                buttonOrder: ['confirm', 'cancel']
+            }}>
+                <CssBaseline />
+                <App />
+                <ToastContainer position='bottom-left' theme='colored'/>
+            </ConfirmProvider>
+        </CssVarsProvider>
+    </Provider>
 )
