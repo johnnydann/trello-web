@@ -8,13 +8,22 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+import { createNewColumnApi } from '~/apis'
+import { generatePlaceholderCard } from '~/utils/fortmater'
+import { cloneDeep } from 'lodash'
+import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
+function ListColumns({ columns }) {
+    const dispatch = useDispatch()
+    const board = useSelector(selectCurrentActiveBoard)
+
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
     const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
     const [newColumnTitle, setNewColumnTitle] = useState('')
 
-    const addNewColumn = () => {
+    const addNewColumn = async () => {
         if (!newColumnTitle) {
             toast.error('please enter a column title')
             return
@@ -24,9 +33,44 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
             title: newColumnTitle
         }
 
-        //gọi lên props func createNewColumn nằm ở component cao nhất (boards/id.jsx)
-        createNewColumn(newColumnData)
+        // gọi API tạo mới column và làm lại dữ liệu State Board
+        const createdColumn = await createNewColumnApi({
+            ...newColumnData,
+            boardId: board._id
+        })
 
+        createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+        createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+        //cập nhật state board
+        //phía FE phải tự làm đúng lại state data board thay vì phải gọi lại fetchBoardDetailsApi
+
+
+        /**
+        * Đoạn này sẽ dính lỗi object is not extensible bởi dù đã copy/clone ra giá trị newBoard nhưng bản chất
+        * của spread operator là Shallow Copy/Clone, nên dính phải rules Immutability trong Redux Toolkit không
+        * dùng được hàm PUSH (sửa giá trị mảng trực tiếp), cách đơn giản nhanh gọn nhất ở trường hợp này của chúng
+        * ta là dùng tới Deep Copy/Clone toàn bộ cái Board cho dễ hiểu và code ngắn gọn.
+        * https://redux-toolkit.js.org/usage/immer-reducers
+        * Tài liệu thêm về Shallow và Deep Copy Object trong JS:
+        * https://www.javascripttutorial.net/object/3-ways-to-copy-objects-in-javascript/
+        */
+        // const newBoard = { ...board }
+        const newBoard = cloneDeep(board)
+        newBoard.columns.push(createdColumn)
+        newBoard.columnOrderIds.push(createdColumn._id)
+        // setBoard(newBoard)
+
+        /**
+        * Ngoài ra cách nữa là vẫn có thể dùng array.concat thay cho push như docs của Redux Toolkit ở trên vì
+        * push sẽ thay đổi giá trị mảng trực tiếp, còn concat thì nó merge - ghép mảng lại và
+        * tạo ra một mảng mới để chúng ta gán lại giá trị nên không vấn đề gì.
+        */
+        // const newBoard = { ...board }
+        // newBoard.columns = newBoard.columns.concat([createdColumn])
+        // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([createdColumn._id])
+
+        dispatch(updateCurrentActiveBoard(newBoard))
         //đóng trạng thái thêm columns mới và clear input
         toggleOpenNewColumnForm()
         setNewColumnTitle('')
@@ -49,13 +93,9 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
                 }}
             >
                 {/* board content */}
-                {columns?.map((column) => {
-                    return <Column
-                        key={column._id}
-                        column={column}
-                        createNewCard ={createNewCard}
-                        deleteColumnDetails={deleteColumnDetails}
-                    />})}
+                {columns?.map((column) =>
+                    <Column key={column._id} column={column} />
+                )}
 
                 {/* box add new column */}
                 {!openNewColumnForm

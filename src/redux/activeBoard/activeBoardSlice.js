@@ -31,18 +31,8 @@ export const activeBoardSlice = createSlice({
             // action.payload là chuẩn đặt tên dữ liệu và reducer, ở đây chúng ta gán nó ra một biến có nghĩa hơn
             let board = action.payload
 
-            //sắp xếp các thứ tự các columns luôn ở đây trước khi đưa dữ liệu xuống các component con, vid 71
-            board.columns = mapOrder(board.columns, board?.columnOrderIds, '_id')
-
-            board.columns.forEach(column => {
-                if (isEmpty(column.cards)) {
-                    column.cards = [generatePlaceholderCard(column)]
-                    column.cardOrderIds = [generatePlaceholderCard(column)._id]
-                } else {
-                    //sắp xếp các thứ tự các cards luôn ở đây trước khi đưa dữ liệu xuống các component con
-                    column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
-                }
-            })
+            // xử lý dữ liệu
+            // ...
 
             // update lại dữ liệu currentActiveBoard
             state.currentActiveBoard = board
@@ -56,8 +46,18 @@ export const activeBoardSlice = createSlice({
             // action.payload ở đây chính là cái response.data trả về ở trên
             const board = action.payload
 
-            // xử lý dữ liệu nếu cần thiết
-            //...
+            //sắp xếp các thứ tự các columns luôn ở đây trước khi đưa dữ liệu xuống các component con, vid 71
+            board.columns = mapOrder(board.columns, board?.columnOrderIds, '_id')
+
+            board.columns.forEach(column => {
+                if (isEmpty(column.cards)) {
+                    column.cards = [generatePlaceholderCard(column)]
+                    column.cardOrderIds = [generatePlaceholderCard(column)._id]
+                } else {
+                    //sắp xếp các thứ tự các cards luôn ở đây trước khi đưa dữ liệu xuống các component con
+                    column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
+                }
+            })
 
             // update lại dữ liệu currentActiveBoard
             state.currentActiveBoard = board
